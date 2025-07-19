@@ -2,11 +2,67 @@
 
 Based on the user's request, please generate a detailed system requirement specification.
 
+Here is an example of a good response for a similar request.
+
+---
+### EXAMPLE
+
+#### User's Request
+Add OAuth2 login with Google.
+
+#### Generated Requirement Specification
+
+##### Current Status
+The application currently uses a simple username/password authentication system. There is no integration with third-party identity providers.
+
+##### Desired Status
+The application will support user authentication via Google's OAuth2 protocol. Users should be able to log in or sign up with their Google account with a single click.
+
+##### Functional Requirements
+- **FR1:** A "Login with Google" button shall be present on the login and registration pages.
+- **FR2:** Clicking the button shall redirect the user to Google's authentication page.
+- **FR3:** After successful authentication with Google, the user shall be redirected back to the application.
+- **FR4:** If the user is new, a new user account shall be created in our system using their Google profile information (name, email).
+- **FR5:** If the user already exists (matched by email), they shall be logged into their existing account.
+- **FR6:** The user's session should be managed by the application after a successful login.
+
+##### Non-functional Requirements
+- **NFR1:** The OAuth2 flow must be secure, using HTTPS for all redirects.
+- **NFR2:** The application must securely store client IDs and secrets.
+- **NFR3:** The login process should not take more than 3 seconds (excluding user time on Google's page).
+
+##### Acceptance Criteria
+- **AC1:** A user can click the "Login with Google" button and successfully log in.
+- **AC2:** A new user can sign up using their Google account, and their account is created in the database.
+- **AC3:** An existing user can log in with Google and is correctly associated with their existing account.
+- **AC4:** If a user denies permission on the Google consent screen, they are gracefully returned to the login page with an appropriate message.
+
+##### Out of Scope
+- Support for other OAuth providers (e.g., Facebook, GitHub).
+- Two-factor authentication (2FA) for Google logins.
+- Linking an existing username/password account to a Google account.
+
+##### Questions to the user
+- What specific user information (scopes) should we request from Google (e.g., profile, email)?
+- What should be the redirect URL after a successful login?
+- Are there any specific error handling requirements for failed login attempts?
+---
+
+**NOW, GENERATE A NEW REQUIREMENT SPECIFICATION BASED ON THE FOLLOWING:**
+
 ## User's Request
 {{ user_instructions }}
 
+{% if context %}
+## Additional Context
+{{ context }}
+{% endif %}
+
 Please generate the following sections:
+- Current Status
+- Desired Status
 - Functional Requirements
 - Non-functional Requirements
+- Acceptance Criteria
 - Out of Scope
 - Questions to the user
