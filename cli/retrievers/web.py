@@ -1,5 +1,5 @@
 from langchain_community.retrievers import TavilySearchAPIRetriever
-from langchain_google_community import GoogleSearchAPIRetriever
+from langchain_google_community.search import GoogleSearchAPIWrapper
 
 from cli.retrievers.document import Document
 
@@ -12,9 +12,13 @@ class WebRetriever:
     def search(self, query: str) -> list[Document]:
         if self.search_engine_name == "tavily":
             retriever = TavilySearchAPIRetriever(**self.kwargs)
+            return retriever.invoke(query)
         elif self.search_engine_name == "google":
-            retriever = GoogleSearchAPIRetriever(**self.kwargs)
+            retriever = GoogleSearchAPIWrapper(**self.kwargs)
+            return [Document(page_content=retriever.run(query))]
         else:
             raise ValueError(f"Unknown search engine: {self.search_engine_name}")
 
-        return retriever.invoke(query)
+def search_in_web(query: str) -> list[Document]:
+    retriever = WebRetriever(search_engine_name="google")
+    return retriever.search(query)

@@ -17,6 +17,7 @@
 #     web search to gather external information.
 
 from abc import ABC, abstractmethod
+from dataclasses import asdict
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -34,7 +35,7 @@ class BaseAgent(ABC):
     def _render_prompt(self, context: ContextBundle) -> str:
         env = Environment(loader=FileSystemLoader("."))
         template = env.get_template(self.template_path)
-        return template.render(context.model_dump())
+        return template.render(asdict(context))
 
     def _search_in_web(self, query: str) -> str:
         return "\n".join([doc.page_content for doc in search_in_web(query)])

@@ -43,3 +43,9 @@ coding_agents/              ← root of the repo
         └── llm.py            # Gemini / Ollama init
 
 ```
+
+## Testing
+
+```bash
+uv run pytest
+```
