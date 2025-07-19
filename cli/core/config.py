@@ -31,4 +31,5 @@ class Config:
     SEARCH_ENGINE_NAME = os.environ.get("SEARCH_ENGINE_NAME", "google")
     SEARCH_ENGINE_API_KEY = os.environ.get("SEARCH_ENGINE_API_KEY")
     SEARCH_ENGINE_ID = os.environ.get("SEARCH_ENGINE_ID")
+    PROJECT_PATH = os.environ.get("PROJECT_PATH", ".")
 

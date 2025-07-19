@@ -16,10 +16,14 @@
 # *   `from cli.retrievers.web import search_in_web`:
 #     web search to gather external information.
 
+import os
+import subprocess
 from abc import ABC, abstractmethod
 from dataclasses import asdict
+from typing import Optional
 
 from jinja2 import Environment, FileSystemLoader
+from rich.console import Console
 
 from cli.core.context_bundle import ContextBundle
 from cli.core.llm import get_llm
@@ -28,14 +32,41 @@ from cli.retrievers.web import search_in_web
 
 
 class BaseAgent(ABC):
-    def __init__(self, template_path: str):
+    def __init__(self, template_path: str, console: Optional[Console] = None):
         self.template_path = template_path
         self.llm = get_llm()
+        self.console = console
+
+    def _log(self, message: str):
+        if self.console:
+            self.console.log(message)
 
     def _render_prompt(self, context: ContextBundle) -> str:
         env = Environment(loader=FileSystemLoader("."))
         template = env.get_template(self.template_path)
         return template.render(asdict(context))
+
+    def _run_command(self, command: list[str], cwd: str) -> str:
+        try:
+            process = subprocess.run(
+                command,
+                check=True,
+                capture_output=True,
+                text=True,
+                cwd=cwd,
+            )
+            return process.stdout
+        except (subprocess.CalledProcessError, FileNotFoundError) as e:
+            return f"Error running command '{' '.join(command)}': {e}"
+
+    def _read_file(self, file_path: str) -> str:
+        if not os.path.exists(file_path):
+            return f"File not found: {file_path}"
+        try:
+            with open(file_path, "r") as f:
+                return f.read()
+        except Exception as e:
+            return f"Error reading file {file_path}: {e}"
 
     def _search_in_web(self, query: str) -> str:
         return "\n".join([doc.page_content for doc in search_in_web(query)])

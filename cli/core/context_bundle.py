@@ -17,6 +17,7 @@ class ContextBundle:
     """
 
     user_instructions: str
+    context: str | None = None
     file_context: str | None = None
     web_context: str | None = None
     rag_context: str | None = None
