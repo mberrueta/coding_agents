@@ -15,7 +15,7 @@ console = Console()
 # Example:
 #
 # ```py
-# uv cli requirement -c "Add OAuth2 Login"
+# uv run cli requirement -c "Add OAuth2 login"
 # ```
 @app.command("generate")
 def generate(doc_type: DocType, context: str = typer.Option("", "--context", "-c")):
