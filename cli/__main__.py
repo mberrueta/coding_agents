@@ -1,7 +1,11 @@
 import os
+import sys
 import typer
 from rich.console import Console
 from enum import Enum
+
+# Add project root to sys.path to allow for absolute imports
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from cli.agents.requirement import RequirementAgent
 from cli.core.config import Config
@@ -37,8 +41,7 @@ def requirement(
 
     agent = RequirementAgent(console=console)
     bundle = ContextBundle(user_instructions=context)
-    with console.status(f"[bold green]Generating {doc_type.value}...[/bold green]"):
-        result = agent.generate(bundle, project_path=final_project_path)
+    result = agent.generate(bundle, project_path=final_project_path)
 
     if result:
         output_path = output or f"output/{doc_type.value}.md"

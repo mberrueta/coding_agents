@@ -75,5 +75,5 @@ class BaseAgent(ABC):
         return "\n".join([doc.page_content for doc in search_in_rag(query)])
 
     @abstractmethod
-    def generate(self, context: ContextBundle) -> str:
+    def generate(self, context: ContextBundle, **kwargs) -> str:
         pass

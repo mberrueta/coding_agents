@@ -1,7 +1,10 @@
 import os
+from dataclasses import asdict
 from typing import Optional
 
+from jinja2 import Environment, FileSystemLoader
 from rich.console import Console
+from prompt_toolkit import prompt as prompt_toolkit_prompt
 
 from cli.agents.base import BaseAgent
 from cli.core.context_bundle import ContextBundle
@@ -10,6 +13,9 @@ from cli.core.context_bundle import ContextBundle
 class RequirementAgent(BaseAgent):
     def __init__(self, console: Optional[Console] = None):
         super().__init__("cli/templates/requirement/prompt.md.j2", console=console)
+        self.clarification_template_path = (
+            "cli/templates/requirement/clarification_prompt.md.j2"
+        )
 
     def _gather_project_context(self, project_path: str) -> str:
         """Gathers context from a hardcoded set of files for a Phoenix project."""
@@ -54,18 +60,70 @@ class RequirementAgent(BaseAgent):
 
         return "\n".join(context_parts)
 
-    def generate(self, context: ContextBundle, project_path: str) -> str:
-        self._log("Gathering project context...")
-        project_context = self._gather_project_context(project_path)
+    def _get_clarifying_questions(
+        self, user_instructions: str, project_context: str
+    ) -> str | None:
+        """Asks the LLM if it has questions, returns them or None."""
+        clarification_bundle = ContextBundle(
+            user_instructions=user_instructions, context=project_context
+        )
+        env = Environment(loader=FileSystemLoader("."))
+        template = env.get_template(self.clarification_template_path)
+        prompt = template.render(asdict(clarification_bundle))
+
+        with self.console.status(
+            "[bold green]Checking for necessary clarifications...[/bold green]"
+        ):
+            llm_questions = self.llm.invoke(prompt).content.strip()
+
+        if "NO_QUESTIONS" in llm_questions or not llm_questions:
+            return None
+        return llm_questions
+
+    def generate(self, context: ContextBundle, **kwargs) -> str:
+        project_path = kwargs.get("project_path")
+        if not project_path:
+            raise ValueError("project_path is required for RequirementAgent")
+
+        with self.console.status("[bold green]Gathering project context...[/bold green]"):
+            project_context = self._gather_project_context(project_path)
+
+        questions = self._get_clarifying_questions(
+            context.user_instructions, project_context
+        )
+
+        clarification_conversation = ""
+        if questions:
+            self.console.print(
+                "\n[bold yellow]The AI has some clarifying questions for you:[/bold yellow]"
+            )
+            self.console.print(questions)
+            self.console.print(
+                "[dim]You can use SHIFT+ENTER for multiline input. Press ESC then ENTER to submit.[/dim]"
+            )
+            self.console.print("\n[bold yellow]Your answers[/bold yellow]")
+            # Rich's Prompt.ask doesn't support multiline. We use prompt_toolkit directly,
+            # which is a dependency of rich for advanced prompt features.
+            # The user is instructed to press ESC -> Enter to submit.
+            answers = prompt_toolkit_prompt(multiline=True)
+            clarification_conversation = (
+                f"\n\n### AI's Questions\n{questions}\n\n### User's Answers\n{answers}"
+            )
 
         full_context = f"## Project Context\n\n{project_context}"
         if context.context:
             full_context += f"\n\n## Additional Context from User\n\n{context.context}"
 
+        if clarification_conversation:
+            full_context += f"\n\n## Clarification Round\n{clarification_conversation}"
+
         context.context = full_context
 
-        self._log("Generating requirement document...")
-        prompt = self._render_prompt(context)
-        response = self.llm.invoke(prompt)
+        with self.console.status(
+            "[bold green]Generating requirement document...[/bold green]"
+        ):
+            prompt = self._render_prompt(context)
+            response = self.llm.invoke(prompt)
+
         self._log("Done.")
         return response.content
