@@ -16,6 +16,7 @@ dependencies = [
     "sentence-transformers>=5.0.0",
     "typer>=0.16.0",
     "rich>=14.0.0",
+    "pytest>=8.3.2",
 ]
 
 [project.scripts]

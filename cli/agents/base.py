@@ -6,24 +6,24 @@
 #     These are from the Jinja2 templating library.
 #     They are used in the `_render_prompt` method to load a template file
 #     from the filesystem and fill it with data.
-# *   `from brixmis.core.context_bundle import ContextBundle`:
+# *   `from cli.core.context_bundle import ContextBundle`:
 #     Imports a custom `ContextBundle` data class, which is used to pass structured context data
 #     to the agent's methods.
-# *   `from brixmis.core.llm import get_llm`:  Large Language Model (LLM) client,
+# *   `from cli.core.llm import get_llm`:  Large Language Model (LLM) client,
 #     which is then used by the agent.
-# *   `from brixmis.retrievers.rag import search_in_rag`:
+# *   `from cli.retrievers.rag import search_in_rag`:
 #     search over a local knowledge base using Retrieval-Augmented Generation (RAG).
-# *   `from brixmis.retrievers.web import search_in_web`:
+# *   `from cli.retrievers.web import search_in_web`:
 #     web search to gather external information.
 
 from abc import ABC, abstractmethod
 
 from jinja2 import Environment, FileSystemLoader
 
-from brixmis.core.context_bundle import ContextBundle
-from brixmis.core.llm import get_llm
-from brixmis.retrievers.rag import search_in_rag
-from brixmis.retrievers.web import search_in_web
+from cli.core.context_bundle import ContextBundle
+from cli.core.llm import get_llm
+from cli.retrievers.rag import search_in_rag
+from cli.retrievers.web import search_in_web
 
 
 class BaseAgent(ABC):
