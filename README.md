@@ -26,7 +26,20 @@ coding_agents/              ← root of the repo
 └── cli/
     ├── __init__.py
     ├── __main__.py
-    └── agents/
-        ├── __init__.py
-        └── requirement_agent.py
+    ├── agents/
+    │   ├── base.py           # ABC Agent
+    │   ├── requirement.py    # RequirementAgent(BaseAgent)
+    │   ├── design.py
+    │   └── task.py
+    ├── retrievers/
+    │   ├── rag.py            # FAISS / Chroma
+    │   └── web.py            # SerpAPI or Tavily
+    ├── templates/
+    │   ├── requirement/*.md.j2
+    │   ├── design/*.md.j2
+    │   └── task/*.md.j2
+    └── core/
+        ├── context_bundle.py # pydantic model above
+        └── llm.py            # Gemini / Ollama init
+
 ```
