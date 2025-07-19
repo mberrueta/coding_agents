@@ -1,8 +1,8 @@
 from langchain_community.vectorstores.chroma import Chroma
 from langchain_core.documents import Document
 
-from brixmis.config import Config
-from brixmis.core.embedding import get_embedding_function
+from cli.core.config import Config
+from cli.core.embedding import get_embedding_function
 
 
 def search_in_rag(

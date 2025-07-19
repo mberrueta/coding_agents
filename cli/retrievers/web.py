@@ -1,12 +1,20 @@
-from brixmis.config import Config
-from brixmis.retrievers.document import Document
-from brixmis.retrievers.web import WebRetriever
+from langchain_community.retrievers import TavilySearchAPIRetriever
+from langchain_google_community import GoogleSearchAPIRetriever
+
+from cli.retrievers.document import Document
 
 
-def search_in_web(query: str) -> list[Document]:
-    web_retriever = WebRetriever(
-        search_engine_name=Config.SEARCH_ENGINE_NAME,
-        search_engine_api_key=Config.SEARCH_ENGINE_API_KEY,
-        search_engine_id=Config.SEARCH_ENGINE_ID,
-    )
-    return web_retriever.search(query=query)
+class WebRetriever:
+    def __init__(self, search_engine_name: str, **kwargs):
+        self.search_engine_name = search_engine_name
+        self.kwargs = kwargs
+
+    def search(self, query: str) -> list[Document]:
+        if self.search_engine_name == "tavily":
+            retriever = TavilySearchAPIRetriever(**self.kwargs)
+        elif self.search_engine_name == "google":
+            retriever = GoogleSearchAPIRetriever(**self.kwargs)
+        else:
+            raise ValueError(f"Unknown search engine: {self.search_engine_name}")
+
+        return retriever.invoke(query)

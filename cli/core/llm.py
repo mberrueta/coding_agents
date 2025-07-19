@@ -1,6 +1,6 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from brixmis.config import Config
+from cli.core.config import Config
 
 
 def get_llm(model: str = Config.LLM_MODEL_NAME, temperature: float = 0.2) -> ChatGoogleGenerativeAI:
