@@ -22,8 +22,8 @@ class Config:
     """
 
     # Define default values for configurations that may not be set
-    LLM_MODEL_NAME = os.environ.get("LLM_MODEL_NAME", "gemini-1.5-flash")
-    GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+    LLM_MODEL_NAME = os.environ.get("LLM_MODEL_NAME", "gemini-2.5-pro-preview-05-06")
+    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
     EMBEDDING_MODEL_NAME = os.environ.get(
         "EMBEDDING_MODEL_NAME", "text-embedding-004"
     )
