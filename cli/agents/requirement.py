@@ -99,7 +99,7 @@ class RequirementAgent(BaseAgent):
             )
             self.console.print(questions)
             self.console.print(
-                "[dim]You can use SHIFT+ENTER for multiline input. Press ESC then ENTER to submit.[/dim]"
+                "[dim]You can use META+ENTER to submit.[/dim]"
             )
             self.console.print("\n[bold yellow]Your answers[/bold yellow]")
             # Rich's Prompt.ask doesn't support multiline. We use prompt_toolkit directly,

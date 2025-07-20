@@ -20,10 +20,17 @@ dependencies = [
     "prompt-toolkit>=3.0.41",
     "pytest>=8.3.2",
     "jinja2>=3.1.4",
+    "networkx>=3.5",
+    "sentence-transformers>=2.7.0",
+    "tree-sitter>=0.21.0",
+    "tree-sitter-language-pack>=0.9.0",
 ]
 
 [project.scripts]
 cli = "cli.__main__:app"
+
+[tool.setuptools.packages.find]
+include = ["cli*", "cli.*"]
 
 
 
