@@ -14,21 +14,24 @@ uv init
 
 ## Quick start
 
+### Requirement Agent
+The first step is to generate a `requirement.md` file.
+
 ```bash
 # Generate requirements for adding OAuth2 login
-uv run cli requirement -c "Add OAuth2 login"
-
-# Generate requirements and save to a custom file
-uv run cli requirement -c "Add OAuth2 login" -o my_requirements.md
-
-# To provide project context, use the --project-path argument (-p)
-# or set the PROJECT_PATH environment variable. The CLI argument takes precedence.
-#
-# Example analyzing a specific project path:
-uv run cli requirement \
-  -c "Add a new dashboard to view monthly reports" \
-  -p "/mnt/data4/matt/code/doctor_smart/doctor_smart"
+uv run cli requirement --context "Add OAuth2 login" --project-path "/path/to/your/project" > ./output/requirement.md
 ```
+
+### Design Agent
+Once you have a `requirement.md` file, you can run the `design` agent to generate a technical design.
+
+```bash
+# Generate a design document from the requirement
+uv run cli design --project-path "/path/to/your/project"
+```
+
+By default, the `design` agent will look for `./output/requirement.md`. You can specify a different path with the `--requirement-path` option.
+
 
 ## Structure
 

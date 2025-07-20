@@ -55,17 +55,45 @@ def requirement(
         console.print(f"\n[bold green]Output written to {output_path}[/bold green]")
 
 
+from cli.agents.design import DesignAgent
+
 @app.command()
 def design(
-    context: str = typer.Option("", "--context", "-c", help="The user's instructions for the agent."),
+    context: str = typer.Option("", "--context", "-c", help="Additional context for the agent."),
     project_path: str = typer.Option(
         None, "--project-path", "-p", help="The root path of the project to analyze. Overrides PROJECT_PATH env var."
     ),
+    requirement_path: str = typer.Option(
+        None, "--requirement-path", "-r", help="The path to the requirement.md file."
+    ),
     output: str = typer.Option(None, "--output", "-o", help="The path to the output file."),
 ):
-    """Generate a design.md document. (Not implemented yet)"""
-    console.print(f"[bold red]Agent for {DocType.design.value} not implemented yet.[/bold red]")
-    raise typer.Exit()
+    """Generate a design.md document."""
+    doc_type = DocType.design
+    console.print(f"[bold green]Agent 1 – generating {doc_type.value}[/bold green]")
+
+    final_project_path = project_path or Config.PROJECT_PATH
+    console.print(f"Using project path: {final_project_path}")
+
+    agent = DesignAgent(console=console)
+    bundle = ContextBundle(user_instructions="", context=context) # user_instructions comes from the requirement file
+    
+    kwargs = {"project_path": final_project_path}
+    if requirement_path:
+        kwargs["requirement_path"] = requirement_path
+
+    result = agent.generate(bundle, **kwargs)
+
+    if result:
+        output_path = output or f"output/{doc_type.value}.md"
+        output_dir = os.path.dirname(output_path)
+        if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
+
+        with open(output_path, "w") as f:
+            f.write(result)
+
+        console.print(f"\n[bold green]Output written to {output_path}[/bold green]")
 
 
 @app.command()

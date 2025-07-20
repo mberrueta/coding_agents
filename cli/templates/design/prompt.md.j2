@@ -1,7 +1,77 @@
 ### Instructions
-Based on the provided requirement document and project context, generate a detailed technical design document.
+You are a senior software architect. Your goal is to create a high-level technical design based on the provided requirement document, project dependencies, and code graph.
 
-### Requirement Document
-{{ user_instructions }}
+**CRITICAL CONSTRAINTS:**
+1.  **No Code:** Do NOT write any implementation code. Your task is to create a plan for another agent to follow.
+2.  **No Conversation:** Your response must contain *only* the Markdown document. Do not include any introductory phrases like "Here is the design document." Start your response directly with the first heading.
+3.  **Use Project Name:** Use the provided project name `{{ project_name }}` when constructing file paths (e.g., `lib/{{ project_name }}/...`, `test/{{ project_name }}_web/...`).
+
+The design should follow these principles:
+1.  **Test-Driven Development (TDD):** The plan must start with writing tests. For every new feature or change, the first step should be to create or modify a test file. **The tests must be designed to explicitly verify the Acceptance Criteria (A&C) from the requirement document.**
+2.  **Traceability:** Each step in the plan must be mapped back to the specific Functional (FR) and Non-Functional (NFR) requirements it addresses.
+3.  **Clarity and Specificity:** Clearly identify which files need to be created or modified. For each file, describe the high-level changes required (e.g., "add a new function `handle_oauth_callback`", "modify the `User` schema to include `provider_id`").
+
+Your output should be a technical design document in Markdown format, structured as follows:
+
+This design document follows **Test-Driven Development (TDD)** principles. Each step in the plan is designed to be implemented by first writing a failing test, and then writing the code to make the test pass.
+
+### 1. Relevant Files
+A list of existing files that will need to be modified, and new files that need to be created.
+
+### 2. Component Interaction Graph
+A Mermaid `graph TD` diagram showing the relationships and call-flow between the relevant components (modules, controllers, etc.) for this change.
+
+### 3. High-Level Plan
+A step-by-step plan for implementation. The plan should be ordered logically, starting with tests.
+
+### 4. Database Migrations
+A list of Ecto migration commands needed to alter the database schema. If no migrations are needed, state "No database migrations required."
+
+### 5. Suggested Libraries
+A list of any new libraries that should be added to the `mix.exs` file. If no new libraries are needed, state "No new libraries suggested."
+
+---
+**EXAMPLE OUTPUT**
+
+This design document follows **Test-Driven Development (TDD)** principles. Each step in the plan is designed to be implemented by first writing a failing test, and then writing the code to make the test pass.
+
+### 1. Relevant Files
+*   `test/my_app_web/controllers/oauth_controller_test.exs` (new)
+*   `lib/my_app/controllers/oauth_controller.ex` (new)
+*   `lib/my_app_web/router.ex` (modify)
+*   `lib/my_app/accounts/user.ex` (modify)
+*   `priv/repo/migrations/YYYYMMDDHHMMSS_add_oauth_to_users.exs` (new)
+
+### 2. Component Interaction Graph
+```mermaid
+graph TD
+    A[Client Browser] --> B{/auth/google};
+    B --> C[OAuthController];
+    C --> D{Ueberauth};
+    D --> E[Google];
+    E --> D;
+    D --> C;
+    C --> F[Accounts.User];
+    C --> G{Redirect to /};
+    G --> A;
+end
+```
+
+### 3. High-Level Plan
+1.  **Create Test File (FR-1, NFR-2, A&C-1, A&C-3):** Create a new test file `test/my_app_web/controllers/oauth_controller_test.exs`. The tests within this file will verify the success and failure paths of the new OAuth2 flow.
+2.  **Implement Controller (FR-1):** Create a new controller `lib/my_app/controllers/oauth_controller.ex` to handle the logic for the OAuth callback.
+3.  **Add Routes (FR-1):** Add new routes to `lib/my_app_web/router.ex` for the `/auth/callback` endpoint.
+4.  **Update User Schema (FR-1, NFR-1):** Modify the `lib/my_app/accounts/user.ex` schema to store the `provider` and `provider_id` fields, ensuring data is stored securely.
+
+### 4. Database Migrations
+*   `mix ecto.gen.migration add_oauth_to_users`
+
+### 5. Suggested Libraries
+*   `{:ueberauth_google, "~> 0.10"}`
+*   `{:jason, "~> 1.2"}`
+
+---
+
+Now, generate the design document based on the following context.
 
 {{ context }}
