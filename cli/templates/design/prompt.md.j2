@@ -28,7 +28,15 @@ A step-by-step plan for implementation. The plan should be ordered logically, st
 A list of Ecto migration commands needed to alter the database schema. If no migrations are needed, state "No database migrations required."
 
 ### 5. Suggested Libraries
-A list of any new libraries that should be added to the `mix.exs` file. If no new libraries are needed, state "No new libraries suggested."
+Based on the requirement and the existing dependencies, list any libraries that should be used or added.
+
+#### Backend (Elixir)
+- **Existing Libraries to Use:** List any relevant libraries from `mix.exs` that should be utilized for this task. If none, state "None".
+- **New Libraries to Add:** Suggest any new libraries to be added to `mix.exs`. If none, state "No new libraries required."
+
+#### Frontend (JavaScript)
+- **Existing Libraries to Use:** List any relevant libraries from `package.json` that should be utilized for this task. If none, state "None".
+- **New Libraries to Add:** Suggest any new, well-known JavaScript libraries to be added to `package.json`. If none, state "No new libraries required."
 
 ---
 **EXAMPLE OUTPUT**
@@ -67,8 +75,17 @@ end
 *   `mix ecto.gen.migration add_oauth_to_users`
 
 ### 5. Suggested Libraries
-*   `{:ueberauth_google, "~> 0.10"}`
-*   `{:jason, "~> 1.2"}`
+#### Backend (Elixir)
+- **Existing Libraries to Use:**
+  - `{:jason, "~> 1.2"}`: for handling JSON responses from the provider.
+- **New Libraries to Add:**
+  - `{:ueberauth_google, "~> 0.10"}`
+
+#### Frontend (JavaScript)
+- **Existing Libraries to Use:**
+  - None
+- **New Libraries to Add:**
+  - No new libraries required.
 
 ---
 
