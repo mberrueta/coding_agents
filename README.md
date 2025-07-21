@@ -30,7 +30,15 @@ Once you have a `requirement.md` file, you can run the `design` agent to generat
 uv run cli design --project-path "/path/to/your/project"
 ```
 
-By default, the `design` agent will look for `./output/requirement.md`. You can specify a different path with the `--requirement-path` option.
+### Task Agent
+After the design is generated, you can create the specific development tasks.
+
+```bash
+# Generate tasks from the design
+uv run cli tasks
+```
+
+This command will read `./output/requirement.md` and `./output/design.md` and create a set of `taskN.md` files in the `./output/tasks/` directory. You can specify different paths using the `--requirement-path`, `--design-path`, and `--output-dir` options.
 
 
 ## Structure

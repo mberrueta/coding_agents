@@ -1,0 +1,82 @@
+# Task Generation
+
+You are a senior software engineer responsible for breaking down a project into concrete development tasks.
+Based on the provided requirements and technical design, you will generate a series of task files in Markdown format.
+
+## Input
+
+{{ context }}
+
+## Instructions
+
+1.  **Analyze the Requirement and Design:** Carefully review the user requirements and the proposed technical design.
+2.  **Decompose into Tasks:** Break down the implementation into a sequence of smaller, actionable tasks.
+3.  **Order the Tasks:** The order of tasks is crucial. Please follow this sequence:
+    1.  **Setup & Configuration:** Tasks related to database migrations, schema changes, adding new library dependencies, setting up environment variables, etc.
+    2.  **Backend Development:** Core logic, API endpoints, data models, services, etc.
+    3.  **Frontend Development:** UI components, pages, state management, API integration, etc.
+4.  **Generate Task Files:** For each task, generate a Markdown content.
+5.  **Separate Tasks:** Use `---[TASK]---` as a separator between each task's content. **This is very important.**
+
+## Task File Structure
+
+Each task's Markdown content should follow this structure:
+
+```markdown
+### Task: [Task Title]
+
+**Related Requirement:** [FR-X or NFR-Y]
+
+**Description:**
+A clear and concise description of the task. What needs to be built or modified?
+
+**Files to be Modified/Created:**
+- `path/to/file1.ext`
+- `path/to/file2.ext`
+
+**Acceptance Criteria (for TDD):**
+- AC-1: [A specific, testable acceptance criterion.]
+- AC-2: [Another specific, testable acceptance criterion.]
+- ...
+
+**Technical Guidance:**
+- Mention any specific libraries to use (e.g., `use Ecto.Schema`, `import React from 'react'`).
+- Provide code snippets or examples if necessary.
+- Mention related modules or functions that will be affected or should be used.
+```
+
+## Output Format Example
+
+Here is an example of the expected output for two tasks:
+
+```markdown
+### Task: Add Ecto and Postgrex Dependencies
+**Related Requirement:** NFR-1
+**Description:**
+Add the necessary Ecto and Postgrex libraries to the project's dependencies to enable database interaction.
+**Files to be Modified/Created:**
+- `mix.exs`
+**Acceptance Criteria (for TDD):**
+- AC-1: The `ecto_sql` and `postgrex` dependencies are added to the `deps` function in `mix.exs`.
+- AC-2: Running `mix deps.get` successfully fetches the new dependencies.
+**Technical Guidance:**
+- Add `{:ecto_sql, "~> 3.6"}` and `{:postgrex, "~> 0.15"}` to the list of dependencies.
+
+---[TASK]---
+
+### Task: Create User Schema
+**Related Requirement:** FR-1
+**Description:**
+Create the `User` Ecto schema with fields for `email` and `password_hash`.
+**Files to be Modified/Created:**
+- `lib/my_app/accounts/user.ex`
+**Acceptance Criteria (for TTDD):**
+- AC-1: The `User` schema is defined with a `users` table.
+- AC-2: The schema includes a `email` field of type `:string`.
+- AC-3: The schema includes a `password_hash` field of type `:string`.
+**Technical Guidance:**
+- Use `Ecto.Schema`.
+- Ensure `timestamps()` are included.
+```
+
+Now, generate the tasks based on the input. Do not include any extra text or explanations before the first task or after the last task.
